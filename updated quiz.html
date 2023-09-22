@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosa's Brain Quiz Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .quiz-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .question {
+            font-weight: bold;
+        }
+        .feedback {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Nosa's Brain Quiz Game</h1>
+        <form id="quiz-form">
+            <!-- Question 1 -->
+            <fieldset>
+                <legend class="question">Question 1: What is the capital of France?</legend>
+                <label>
+                    <input type="radio" name="q1" value="paris"> Paris
+                </label>
+                <label>
+                    <input type="radio" name="q1" value="london"> London
+                </label>
+                <label>
+                    <input type="radio" name="q1" value="berlin"> Berlin
+                </label>
+            </fieldset>
+
+            <!-- Question 2 -->
+            <fieldset>
+                <legend class="question">Question 2: Which planet is known as the Red Planet?</legend>
+                <label>
+                    <input type="radio" name="q2" value="earth"> Earth
+                </label>
+                <label>
+                    <input type="radio" name="q2" value="mars"> Mars
+                </label>
+                <label>
+                    <input type="radio" name="q2" value="venus"> Venus
+                </label>
+            </fieldset>
+
+            <!-- Question 3 -->
+            <fieldset>
+                <legend class="question">Question 3: What is the largest mammal in the world?</legend>
+                <label>
+                    <input type="radio" name="q3" value="elephant"> Elephant
+                </label>
+                <label>
+                    <input type="radio" name="q3" value="blue whale"> Blue Whale
+                </label>
+                <label>
+                    <input type="radio" name="q3" value="giraffe"> Giraffe
+                </label>
+            </fieldset>
+
+            <!-- Question 4 -->
+            <fieldset>
+                <legend class="question">Question 4: Which gas do plants absorb from the atmosphere?</legend>
+                <label>
+                    <input type="radio" name="q4" value="oxygen"> Oxygen
+                </label>
+                <label>
+                    <input type="radio" name="q4" value="carbon-dioxide"> Carbon Dioxide
+                </label>
+                <label>
+                    <input type="radio" name="q4" value="nitrogen"> Nitrogen
+                </label>
+            </fieldset>
+
+            <button type="submit">Submit Answers</button>
+        </form>
+
+        <div class="feedback" id="results"></div>
+        <div id="timer"></div>
+    </div>
+
+    <script>
+        const quizForm = document.getElementById("quiz-form");
+        const resultsContainer = document.getElementById("results");
+        const timerContainer = document.getElementById("timer");
+        const countdownMinutes = 2; // Adjust the countdown time in minutes
+        let countdownSeconds = countdownMinutes * 60;
+        let timerInterval;
+
+        // Define the correct answers
+        const correctAnswers = {
+            q1: "paris",
+            q2: "mars",
+            q3: "blue whale",
+            q4: "carbon-dioxide"
+        };
+
+        // Start the countdown timer
+        function startTimer() {
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Update the timer display
+        function updateTimer() {
+            const minutes = Math.floor(countdownSeconds / 60);
+            const seconds = countdownSeconds % 60;
+            timerContainer.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+            if (countdownSeconds <= 0) {
+                clearInterval(timerInterval);
+                submitQuiz();
+            }
+
+            countdownSeconds--;
+        }
+
+        // Submit the quiz and calculate the score
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            quizForm.style.display = "none";
+
+            // Get user's answers
+            const userAnswers = {
+                q1: quizForm.elements.q1.value,
+                q2: quizForm.elements.q2.value,
+                q3: quizForm.elements.q3.value,
+                q4: quizForm.elements.q4.value
+            };
+
+            // Check answers and display results
+            let score = 0;
+            for (const question in correctAnswers) {
+                if (userAnswers[question] === correctAnswers[question]) {
+                    score++;
+                }
+            }
+
+            // Display the results and feedback
+            resultsContainer.innerHTML = `You got ${score} out of ${Object.keys(correctAnswers).length} correct!`;
+        }
+
+        // Add event listener for form submission
+        quizForm.addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
+            submitQuiz();
+        });
+
+        // Start the timer when the page loads
+        startTimer();
+    </script>
+</body>
+</html>
